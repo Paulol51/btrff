@@ -7,8 +7,11 @@ string = "Lorem ipsum %s\. This is a test string. %s"
 #string = r"\% percetsn"
 #string = "Sample text"
 
+
+string = "he is such a %slr[%w[%u[dummy]]|idiot] lol"
+
 lexer = parser.Lexer()
 lexer.tokenize(string)
 
-p = parser.Parser()
+p = parser.Parser(censor_mode=False)
 print(f"Tokens: {lexer.tokens}\nResult: {p.parse(lexer.tokens, ['hello', 'world'])}")

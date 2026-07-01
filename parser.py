@@ -67,9 +67,11 @@ class Lexer:
 
 
 class Parser:
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.pos = 0
         self.strings = []
+
+        self.censor_mode: bool = kwargs.get("censor_mode", False)
 
     def parse(self, tokens: list, rstrings: list[str]):
         self.strings = rstrings
@@ -115,8 +117,13 @@ class Parser:
                 inner: str = self._parse_until_rbracket()
 
                 match tv:
-                    case "b": output.append(inner.upper())
-                    case "i": output.append(inner.lower())
+                    case "u": output.append(inner.upper())
+                    case "l": output.append(inner.lower())
+                    case "w": output.append('{' + inner + '}')
+
+                    case "slr": 
+                        words = inner.split("|")
+                        output.append(words[1] if self.censor_mode else words[0])
                     case _: raise SyntaxError(f"Unknown command \"{tv}\" [supposed to have arguments]")
 
             else:
